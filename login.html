@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Login | ONE FOR ALL</title>
+  <meta name="description" content="Sign in to the ONE FOR ALL portal as a student, teacher or administrator.">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main>
+    <section class="login">
+      <div class="container">
+        <div class="login-card reveal">
+
+          <!-- Left panel: text changes with the selected role (see login.js) -->
+          <aside class="login-aside">
+            <div>
+              <p class="eyebrow">ONE FOR ALL Portal</p>
+              <h2 id="asideTitle">Welcome back, student</h2>
+              <p id="asideText"></p>
+            </div>
+            <ul class="perks" id="asidePerks"></ul>
+            <p class="login-aside__note">
+              <svg class="icon icon--sm"><use href="#i-lock"></use></svg>
+              There is no public sign-up. Your ID is issued by the admin office.
+            </p>
+          </aside>
+
+          <!-- Right panel: role tabs + the login form -->
+          <div class="login-main">
+            <h1 class="login-main__title">Sign in</h1>
+
+            <div class="role-tabs" id="roleTabs" role="tablist" aria-label="Choose your role">
+              <button type="button" class="role-tab" role="tab" id="tab-student" aria-controls="panel-student" data-role="student">Student</button>
+              <button type="button" class="role-tab" role="tab" id="tab-teacher" aria-controls="panel-teacher" data-role="teacher">Teacher</button>
+              <button type="button" class="role-tab" role="tab" id="tab-admin"   aria-controls="panel-admin"   data-role="admin">Admin</button>
+            </div>
+
+            <!-- login.js builds one form per role from the template below -->
+            <div id="loginPanels"></div>
+            <noscript><p class="alert alert--error">Please turn on JavaScript to sign in.</p></noscript>
+
+            <p class="login-help">Having trouble? <a href="contact.html">Contact the admin office</a></p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Template cloned once per role. Texts and ids are filled in by login.js -->
+  <template id="loginTemplate">
+    <form class="login-form" role="tabpanel" novalidate hidden>
+      <h2 class="login-form__title"></h2>
+      <p class="login-form__sub"></p>
+
+      <!-- Server / validation messages appear here -->
+      <div class="alert alert--error" role="alert" hidden></div>
+
+      <div class="field">
+        <label data-for="userId">User ID</label>
+        <input type="text" name="userId" data-id="userId" autocomplete="username"
+               autocapitalize="characters" spellcheck="false" maxlength="7" required>
+        <span class="field__hint"></span>
+        <span class="field__error" aria-live="polite"></span>
+      </div>
+
+      <div class="field">
+        <label data-for="password">Password</label>
+        <div class="password-wrap">
+          <input type="password" name="password" data-id="password" autocomplete="current-password" required>
+          <button type="button" class="password-toggle" aria-pressed="false">Show</button>
+        </div>
+        <span class="caps-warning" hidden>Caps Lock is on</span>
+        <span class="field__error" aria-live="polite"></span>
+      </div>
+
+      <div class="form-row">
+        <span class="field__hint">First login? Use the password given by the admin. You will be asked to change it.</span>
+        <button type="button" class="link-btn forgot-link">Forgot password?</button>
+      </div>
+
+      <button type="submit" class="btn btn--primary login-form__submit"></button>
+    </form>
+  </template>
+
+  <!-- Forgot password dialog (native <dialog>, so Esc and focus handling come free) -->
+  <dialog class="forgot-dialog" id="forgotDialog" aria-labelledby="forgotTitle">
+    <button type="button" class="dialog-close" id="forgotClose" aria-label="Close">&times;</button>
+    <h2 id="forgotTitle">Reset your password</h2>
+    <p class="forgot-dialog__text">Passwords are reset by the admin office. Enter your User ID and we will send them a request.</p>
+
+    <div class="alert" id="forgotAlert" role="status" hidden></div>
+
+    <form id="forgotForm" novalidate>
+      <div class="field">
+        <label for="forgotId">User ID</label>
+        <input type="text" id="forgotId" name="userId" placeholder="e.g. STD0001" autocapitalize="characters" spellcheck="false" maxlength="7" required>
+        <span class="field__error" id="forgotError" aria-live="polite"></span>
+      </div>
+      <button type="submit" class="btn btn--primary" id="forgotSubmit">Send reset request</button>
+    </form>
+  </dialog>
+
+  <div id="site-footer"></div>
+
+  <script src="js/components.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+/* ==========================================================
+   login.css: login page only
+   Form fields, alerts and buttons come from pages.css / style.css.
+   ========================================================== */
+
+.login {
+  padding: 4rem 0 5rem;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0, 180, 216, .12), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(0, 119, 182, .1), transparent 45%),
+    var(--accent-tint);
+}
+
+.login-card {
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  max-width: 1000px; margin-inline: auto;
+  overflow: hidden;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 60px rgba(11, 27, 61, .15);
+}
+
+/* ---------- Left panel ---------- */
+.login-aside {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+  padding: 3rem 2.5rem;
+  color: var(--white);
+  background: linear-gradient(150deg, var(--navy), var(--navy-soft));
+}
+.login-aside::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background-image: radial-gradient(rgba(255, 255, 255, .08) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.login-aside::after {
+  content: ''; position: absolute; z-index: -1; right: -30%; bottom: -25%;
+  width: 360px; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 180, 216, .45), transparent 65%);
+}
+.login-aside .eyebrow { color: var(--accent); }
+.login-aside h2 { margin-bottom: .8rem; font-size: 1.9rem; font-weight: 700; color: var(--white); }
+.login-aside p { color: rgba(255, 255, 255, .78); font-size: .95rem; }
+
+.perks li { display: flex; align-items: flex-start; gap: .7rem; margin-bottom: .85rem; font-size: .92rem; color: rgba(255, 255, 255, .9); }
+.perks .icon { margin-top: .15rem; color: var(--accent); }
+
+.login-aside__note { display: flex; gap: .6rem; margin: 0; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, .15); font-size: .8rem !important; }
+.login-aside__note .icon { margin-top: .15rem; color: var(--accent); }
+
+/* ---------- Right panel ---------- */
+.login-main { padding: 3rem 2.8rem; }
+.login-main__title { margin-bottom: 1.4rem; font-size: 1.9rem; font-weight: 700; }
+
+/* Role tabs with a sliding pill. login.js sets --i to 0, 1 or 2 */
+.role-tabs {
+  --i: 0;
+  position: relative;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 2rem; padding: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border); border-radius: var(--radius);
+}
+.role-tabs::before {
+  content: ''; position: absolute; top: 4px; bottom: 4px; left: 4px;
+  width: calc((100% - 8px) / 3);
+  border-radius: 6px;
+  background: var(--navy);
+  box-shadow: 0 6px 16px rgba(11, 27, 61, .25);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform .35s cubic-bezier(.23, 1, .32, 1);
+}
+.role-tab {
+  position: relative; z-index: 1;
+  padding: .75rem .5rem;
+  background: none; border: 0; border-radius: 6px;
+  font: 600 .9rem var(--font); color: var(--muted);
+  cursor: pointer;
+  transition: color .3s ease;
+}
+.role-tab:hover { color: var(--navy); }
+.role-tab[aria-selected="true"] { color: var(--white); }
+
+/* ---------- Form ---------- */
+.login-form { display: grid; gap: 1.2rem; }
+.login-form[hidden] { display: none; }
+.login-form__title { margin-bottom: 0; font-size: 1.3rem; }
+.login-form__sub { margin: -.6rem 0 0; font-size: .92rem; color: var(--muted); }
+.login-form .alert { margin-bottom: 0; }
+.login-form .field { gap: .35rem; }
+
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 4.8rem; }
+.password-toggle {
+  position: absolute; right: .45rem; top: 50%; transform: translateY(-50%);
+  padding: .4rem .75rem;
+  background: none; border: 0; border-radius: 6px;
+  font: 600 .78rem var(--font); color: var(--accent-dark);
+  cursor: pointer;
+  transition: background-color .3s ease;
+}
+.password-toggle:hover { background: var(--accent-tint); }
+
+.caps-warning { font-size: .78rem; font-weight: 500; color: #b26a00; }
+.caps-warning[hidden] { display: none; }
+
+.form-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.form-row .field__hint { max-width: 26ch; }
+.link-btn {
+  padding: 0; background: none; border: 0;
+  font: 500 .85rem var(--font); color: var(--accent-dark);
+  text-decoration: underline; text-underline-offset: 3px;
+  white-space: nowrap; cursor: pointer;
+  transition: color .3s ease;
+}
+.link-btn:hover { color: var(--navy); }
+
+.login-form__submit { width: 100%; padding: 1rem; }
+.login-form__submit[disabled] { opacity: .75; cursor: progress; }
+/* Little spinner while the request is running */
+.login-form__submit.is-loading::after {
+  content: ''; width: 1rem; height: 1rem;
+  border: 2px solid rgba(255, 255, 255, .4); border-top-color: var(--white); border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.login-help { margin: 1.6rem 0 0; text-align: center; font-size: .85rem; color: var(--muted); }
+.login-help a { font-weight: 500; color: var(--accent-dark); }
+.login-help a:hover { color: var(--navy); }
+
+/* ---------- Forgot password dialog ---------- */
+.forgot-dialog {
+  position: fixed; inset: 0; margin: auto;
+  width: min(440px, 92vw); padding: 2.2rem;
+  border: 0; border-radius: var(--radius);
+  box-shadow: 0 30px 80px rgba(11, 27, 61, .35);
+  color: var(--text);
+}
+.forgot-dialog::backdrop { background: rgba(7, 18, 43, .6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.forgot-dialog h2 { font-size: 1.4rem; }
+.forgot-dialog__text { font-size: .92rem; color: var(--muted); }
+.forgot-dialog form { display: grid; gap: 1.2rem; }
+.dialog-close {
+  position: absolute; top: .8rem; right: 1rem;
+  width: 36px; height: 36px;
+  background: none; border: 0; border-radius: 50%;
+  font-size: 1.6rem; line-height: 1; color: var(--muted); cursor: pointer;
+  transition: background-color .3s ease, color .3s ease;
+}
+.dialog-close:hover { background: var(--bg); color: var(--navy); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .login { padding: 2.5rem 0 3.5rem; }
+  .login-card { grid-template-columns: 1fr; }
+  .login-aside { padding: 2rem 1.8rem; }
+  .perks, .login-aside__note { display: none; }   /* keep the phone view short */
+  .login-main { padding: 2rem 1.6rem; }
+}

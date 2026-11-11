@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academics | ONE FOR ALL</title>
+  <meta name="description" content="Explore undergraduate, postgraduate and diploma programs at ONE FOR ALL College, Hyderabad.">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <div id="site-header"></div>
+
+  <main>
+
+    <!-- ========== PAGE HERO ========== -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>Academics</span></nav>
+        <h1 class="page-hero__title">Academics</h1>
+        <p class="page-hero__lead">Undergraduate, postgraduate and diploma programs designed with industry, taught by experienced faculty.</p>
+      </div>
+    </section>
+
+    <!-- ========== PROGRAMS ========== -->
+    <section class="section">
+      <div class="container">
+        <div class="section__intro">
+          <p class="eyebrow">Programs</p>
+          <h2 class="section__title">Find the right course for you</h2>
+          <p class="section__sub">Filter by field of study, then enquire about any program in one click.</p>
+        </div>
+
+        <div class="programs-toolbar">
+          <div class="filters" id="programFilters" role="group" aria-label="Filter programs by field">
+            <button class="chip is-active" data-filter="all">All</button>
+            <button class="chip" data-filter="engineering">Engineering</button>
+            <button class="chip" data-filter="science">Science</button>
+            <button class="chip" data-filter="management">Management</button>
+            <button class="chip" data-filter="diploma">Diploma</button>
+          </div>
+          <p class="programs-count" id="programCount" aria-live="polite"></p>
+        </div>
+
+        <!-- Sample programs. Edit names, durations and eligibility to match the college's real list.
+             data-category drives the filter buttons above (see pages.js). -->
+        <div class="cards">
+
+          <article class="info-card program-card" data-category="engineering">
+            <div class="program-card__top"><span class="badge">Undergraduate</span><span class="program-card__duration">4 years</span></div>
+            <h3>B.Tech Computer Science &amp; Engineering</h3>
+            <p>Programming, algorithms, databases, AI and software engineering, with a final-year industry project.</p>
+            <div class="program-card__tags"><span class="tag">10+2 with Maths and Physics</span></div>
+            <a class="program-card__link" href="contact.html?course=B.Tech%20Computer%20Science%20%26%20Engineering">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="engineering">
+            <div class="program-card__top"><span class="badge">Undergraduate</span><span class="program-card__duration">4 years</span></div>
+            <h3>B.Tech Electronics &amp; Communication</h3>
+            <p>Circuits, embedded systems, signal processing and communication networks, taught in well-equipped labs.</p>
+            <div class="program-card__tags"><span class="tag">10+2 with Maths and Physics</span></div>
+            <a class="program-card__link" href="contact.html?course=B.Tech%20Electronics%20%26%20Communication">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="engineering">
+            <div class="program-card__top"><span class="badge">Undergraduate</span><span class="program-card__duration">4 years</span></div>
+            <h3>B.Tech Mechanical Engineering</h3>
+            <p>Design, manufacturing, thermal systems and robotics, with workshop practice from the first year.</p>
+            <div class="program-card__tags"><span class="tag">10+2 with Maths and Physics</span></div>
+            <a class="program-card__link" href="contact.html?course=B.Tech%20Mechanical%20Engineering">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="engineering">
+            <div class="program-card__top"><span class="badge badge--pg">Postgraduate</span><span class="program-card__duration">2 years</span></div>
+            <h3>M.Tech Data Science</h3>
+            <p>Machine learning, big data and statistical modelling, with a research dissertation.</p>
+            <div class="program-card__tags"><span class="tag">B.Tech / B.E. in a related field</span></div>
+            <a class="program-card__link" href="contact.html?course=M.Tech%20Data%20Science">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="science">
+            <div class="program-card__top"><span class="badge">Undergraduate</span><span class="program-card__duration">3 years</span></div>
+            <h3>B.Sc Mathematics, Statistics &amp; Computer Science</h3>
+            <p>A strong analytical foundation that opens doors to data careers and higher studies.</p>
+            <div class="program-card__tags"><span class="tag">10+2 with Maths</span></div>
+            <a class="program-card__link" href="contact.html?course=B.Sc%20Mathematics%2C%20Statistics%20%26%20Computer%20Science">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="science">
+            <div class="program-card__top"><span class="badge badge--pg">Postgraduate</span><span class="program-card__duration">2 years</span></div>
+            <h3>M.Sc Applied Mathematics</h3>
+            <p>Advanced mathematics with applications in computing, finance and the sciences.</p>
+            <div class="program-card__tags"><span class="tag">B.Sc with Mathematics</span></div>
+            <a class="program-card__link" href="contact.html?course=M.Sc%20Applied%20Mathematics">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="management">
+            <div class="program-card__top"><span class="badge">Undergraduate</span><span class="program-card__duration">3 years</span></div>
+            <h3>Bachelor of Business Administration (BBA)</h3>
+            <p>Management basics, marketing, finance and entrepreneurship, with live case studies.</p>
+            <div class="program-card__tags"><span class="tag">10+2 in any stream</span></div>
+            <a class="program-card__link" href="contact.html?course=BBA">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="management">
+            <div class="program-card__top"><span class="badge">Undergraduate</span><span class="program-card__duration">3 years</span></div>
+            <h3>B.Com (Computer Applications)</h3>
+            <p>Accounting, taxation and business law combined with practical computing skills.</p>
+            <div class="program-card__tags"><span class="tag">10+2 in Commerce or any stream</span></div>
+            <a class="program-card__link" href="contact.html?course=B.Com%20(Computer%20Applications)">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="management">
+            <div class="program-card__top"><span class="badge badge--pg">Postgraduate</span><span class="program-card__duration">2 years</span></div>
+            <h3>Master of Business Administration (MBA)</h3>
+            <p>Leadership, analytics and strategy, with internships and a capstone project.</p>
+            <div class="program-card__tags"><span class="tag">Any graduate degree</span></div>
+            <a class="program-card__link" href="contact.html?course=MBA">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="diploma">
+            <div class="program-card__top"><span class="badge badge--diploma">Diploma</span><span class="program-card__duration">3 years</span></div>
+            <h3>Diploma in Electronics Engineering</h3>
+            <p>Hands-on technical training that prepares you for jobs or direct entry into the second year of B.Tech.</p>
+            <div class="program-card__tags"><span class="tag">10th pass</span></div>
+            <a class="program-card__link" href="contact.html?course=Diploma%20in%20Electronics%20Engineering">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+          <article class="info-card program-card" data-category="diploma">
+            <div class="program-card__top"><span class="badge badge--diploma">Diploma</span><span class="program-card__duration">3 years</span></div>
+            <h3>Diploma in Computer Engineering</h3>
+            <p>Programming, networking and web development with plenty of lab time.</p>
+            <div class="program-card__tags"><span class="tag">10th pass</span></div>
+            <a class="program-card__link" href="contact.html?course=Diploma%20in%20Computer%20Engineering">Enquire now <svg class="icon icon--sm"><use href="#i-arrow"></use></svg></a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ADMISSION STEPS ========== -->
+    <section class="section section--tint">
+      <div class="container">
+        <div class="section__intro">
+          <p class="eyebrow">How to Join</p>
+          <h2 class="section__title">Admission in four simple steps</h2>
+        </div>
+        <!-- The numbers 1 to 4 are added by a CSS counter -->
+        <div class="steps">
+          <div class="step reveal">
+            <h3>Enquire</h3>
+            <p>Send us an enquiry or visit the admissions desk. We will guide you to the right program.</p>
+          </div>
+          <div class="step reveal" style="--delay:.1s">
+            <h3>Apply</h3>
+            <p>Submit your application with marks sheets and ID proof by the published deadline.</p>
+          </div>
+          <div class="step reveal" style="--delay:.2s">
+            <h3>Counselling</h3>
+            <p>Attend counselling, verify your documents and confirm your seat by paying the admission fee.</p>
+          </div>
+          <div class="step reveal" style="--delay:.3s">
+            <h3>Get your Portal ID</h3>
+            <p>After enrolment, the admin office issues your Student ID so you can sign in to the portal.</p>
+          </div>
+        </div>
+        <p class="center"><a href="contact.html" class="btn btn--primary magnet">Talk to admissions</a></p>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/sheryjs/dist/Shery.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/pages.js"></script>
+</body>
+</html>
