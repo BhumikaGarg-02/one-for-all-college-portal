@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ONE FOR ALL | College Portal, Hyderabad</title>
+  <meta name="description" content="ONE FOR ALL: the official college portal for students, teachers and administrators in Hyderabad, Telangana.">
+
+  <!-- The Poppins font is imported inside style.css -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="home">
+
+  <!-- Top bar + navbar are injected by components.js so every page shares one nav -->
+  <div id="site-header"></div>
+
+  <main>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+      <div class="container hero__inner">
+        <p class="eyebrow">Hyderabad, Telangana &bull; Est. 1985</p>
+        <h1 class="hero__title" id="heroTitle">One campus. One community. One for all.</h1>
+        <p class="hero__lead">A place where students, teachers and administrators come together. Learn, teach and manage everything from a single portal.</p>
+        <div class="hero__actions">
+          <a href="login.html" class="btn btn--primary magnet">Open Portal</a>
+          <a href="academics.html" class="btn btn--ghost magnet">Explore Courses</a>
+        </div>
+      </div>
+      <div class="hero__shape" aria-hidden="true"></div>
+    </section>
+
+    <!-- ========== STATS (overlaps the bottom of the hero) ========== -->
+    <section class="stats">
+      <div class="container stats__grid">
+        <div class="stat"><span class="stat__num" data-count="5200">0</span><span class="stat__label">Students</span></div>
+        <div class="stat"><span class="stat__num" data-count="240">0</span><span class="stat__label">Faculty</span></div>
+        <div class="stat"><span class="stat__num" data-count="32">0</span><span class="stat__label">Programs</span></div>
+        <div class="stat"><span class="stat__num" data-count="40">0</span><span class="stat__label">Years of Legacy</span></div>
+      </div>
+    </section>
+
+    <!-- ========== ANNOUNCEMENTS ========== -->
+    <section class="section" id="announcements">
+      <div class="container">
+        <p class="eyebrow">Notice Board</p>
+        <h2 class="section__title">Latest announcements</h2>
+        <div class="announce-grid" id="announceGrid"><!-- filled by main.js --></div>
+      </div>
+    </section>
+
+    <!-- ========== HISTORY ========== -->
+    <section class="section section--tint" id="history">
+      <div class="container two-col">
+        <div class="reveal">
+          <p class="eyebrow">Our History</p>
+          <h2 class="section__title">Four decades of shaping Hyderabad's future</h2>
+          <p>Founded in 1985 with a single block and 120 students, the college has grown into one of the city's most trusted institutions. Our graduates now work across Hyderabad's technology, healthcare and research sectors and in cities around the world.</p>
+          <p>The ONE FOR ALL portal continues that journey by bringing academics, communication and administration together in one simple place.</p>
+        </div>
+        <ol class="timeline reveal">
+          <li><span>1985</span> College founded with 3 departments</li>
+          <li><span>1998</span> Affiliated with the state university; new library block</li>
+          <li><span>2009</span> Autonomous status and research centre opened</li>
+          <li><span>2018</span> Smart classrooms and digital campus launched</li>
+          <li><span>2026</span> ONE FOR ALL portal goes live</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========== PRINCIPAL'S MESSAGE ========== -->
+    <section class="section" id="principal">
+      <div class="container principal reveal">
+        <div class="principal__photo" role="img" aria-label="Portrait of the Principal"></div>
+        <div>
+          <p class="eyebrow">Principal's Message</p>
+          <h2 class="section__title">Education is a shared effort</h2>
+          <blockquote>
+            Every student who walks through our gates carries the hopes of a family and the promise of a community. Our job is to make sure they leave with knowledge, character and the confidence to lead. This portal is one more step in making that journey open and transparent for everyone.
+          </blockquote>
+          <p class="principal__name"><strong>Dr. Principal Name</strong><br><small>Principal, ONE FOR ALL College</small></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== FACILITIES (cards with hover-video reveal) ========== -->
+    <section class="section section--tint" id="facilities">
+      <div class="container">
+        <p class="eyebrow">Campus Life</p>
+        <h2 class="section__title">World-class facilities</h2>
+        <p class="section__sub">Hover over a facility on desktop to preview it. A video plays inside the cursor.</p>
+
+        <!-- Order of these cards must match the order of the videos in main.js -->
+        <ul class="facility-list">
+          <li><a href="facilities.html#labs" class="facility-link hvr-media">
+            <span class="facility-link__no">01</span>
+            <span class="facility-link__name">Smart Labs</span>
+            <span class="facility-link__desc">Modern computer, electronics and science labs with industry-grade equipment.</span>
+            <span class="facility-link__arrow">Explore &rarr;</span>
+          </a></li>
+          <li><a href="facilities.html#library" class="facility-link hvr-media">
+            <span class="facility-link__no">02</span>
+            <span class="facility-link__name">Central Library</span>
+            <span class="facility-link__desc">Over 60,000 books, digital journals and quiet reading halls open until late.</span>
+            <span class="facility-link__arrow">Explore &rarr;</span>
+          </a></li>
+          <li><a href="facilities.html#sports" class="facility-link hvr-media">
+            <span class="facility-link__no">03</span>
+            <span class="facility-link__name">Sports Complex</span>
+            <span class="facility-link__desc">Cricket ground, indoor courts, track and a fully equipped gymnasium.</span>
+            <span class="facility-link__arrow">Explore &rarr;</span>
+          </a></li>
+          <li><a href="facilities.html#hostel" class="facility-link hvr-media">
+            <span class="facility-link__no">04</span>
+            <span class="facility-link__name">Hostels &amp; Canteen</span>
+            <span class="facility-link__desc">Safe, comfortable residences with hygienic meals and round-the-clock support.</span>
+            <span class="facility-link__arrow">Explore &rarr;</span>
+          </a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== GALLERY ========== -->
+    <section class="section" id="gallery">
+      <div class="container">
+        <div class="section__head">
+          <div>
+            <p class="eyebrow">Gallery</p>
+            <h2 class="section__title">Moments from campus</h2>
+          </div>
+          <div class="filters" id="galleryFilters" role="tablist" aria-label="Gallery categories">
+            <button class="chip is-active" data-filter="all">All</button>
+            <button class="chip" data-filter="events">Events</button>
+            <button class="chip" data-filter="campus">Campus</button>
+            <button class="chip" data-filter="sports">Sports</button>
+          </div>
+        </div>
+        <div class="gallery" id="galleryGrid"><!-- filled by main.js --></div>
+        <p class="center"><a href="gallery.html" class="btn btn--primary magnet">View full gallery</a></p>
+      </div>
+    </section>
+
+    <!-- ========== MAP ========== -->
+    <section class="section section--tint" id="location">
+      <div class="container two-col">
+        <div class="reveal">
+          <p class="eyebrow">Find Us</p>
+          <h2 class="section__title">Visit our campus</h2>
+          <address>
+            ONE FOR ALL College<br>
+            Hyderabad, Telangana, India<br>
+            <a href="tel:+910000000000">+91 00000 00000</a><br>
+            <a href="mailto:info@oneforall.edu.in">info@oneforall.edu.in</a>
+          </address>
+          <a href="contact.html" class="btn btn--primary magnet">Contact us</a>
+        </div>
+        <!-- Keyless Google Maps embed. Swap the q= value for the exact college address. -->
+        <div class="map reveal">
+          <iframe
+            title="College location on Google Maps"
+            src="https://www.google.com/maps?q=Hyderabad,Telangana&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="site-footer"></div>
+
+  <!-- Libraries: GSAP first (Shery.js depends on it), then Shery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/sheryjs/dist/Shery.js"></script>
+
+  <script src="js/components.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
