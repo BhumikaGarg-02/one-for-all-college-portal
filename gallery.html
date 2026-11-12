@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery | ONE FOR ALL</title>
+  <meta name="description" content="Explore campus life, college events, sports tournaments and academic labs at ONE FOR ALL College, Hyderabad.">
+
+  <!-- Core and page stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+
+  <!-- Top bar + navbar injected by components.js -->
+  <div id="site-header"></div>
+
+  <main>
+
+    <!-- ========== PAGE HERO ========== -->
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a><span>Gallery</span></nav>
+        <h1 class="page-hero__title">Campus gallery</h1>
+        <p class="page-hero__lead">A glimpse into student life, cultural events, athletic competitions and state-of-the-art research labs across our campus.</p>
+      </div>
+    </section>
+
+    <!-- ========== GALLERY GRID & FILTERS ========== -->
+    <section class="section">
+      <div class="container">
+        <!-- Filter chips and photo count toolbar -->
+        <div class="gallery-toolbar">
+          <div id="galleryFilters" class="filters" role="group" aria-label="Filter photos by category"></div>
+          <p id="galleryCount" class="programs-count" aria-live="polite"></p>
+        </div>
+
+        <!-- Masonry photo grid populated by gallery.js -->
+        <div id="galleryGrid" class="gallery-grid"></div>
+
+        <!-- Empty state message -->
+        <p id="galleryEmpty" class="gallery-empty" hidden>No photos in this category yet.</p>
+
+        <!-- Fallback message for browsers without JavaScript -->
+        <noscript>
+          <p class="alert">Please enable JavaScript to view and filter the campus photo gallery.</p>
+        </noscript>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== LIGHTBOX MODAL ========== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true" inert>
+    <!-- Close button -->
+    <button type="button" id="lbClose" class="lb-btn lb-close" aria-label="Close photo viewer">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Previous photo button -->
+    <button type="button" id="lbPrev" class="lb-btn lb-nav lb-prev" aria-label="Previous photo">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Photo display stage and caption -->
+    <figure class="lb-figure">
+      <div class="lb-stage">
+        <img id="lbImg" alt="">
+        <div id="lbFallback" class="lb-fallback" hidden>
+          <span id="lbFallbackText"></span>
+        </div>
+      </div>
+      <figcaption class="lb-caption">
+        <div>
+          <strong id="lbTitle"></strong>
+          <span id="lbText"></span>
+        </div>
+        <span id="lbCount" class="lb-count" aria-live="polite"></span>
+      </figcaption>
+    </figure>
+
+    <!-- Next photo button -->
+    <button type="button" id="lbNext" class="lb-btn lb-nav lb-next" aria-label="Next photo">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Footer placeholder injected by components.js -->
+  <div id="site-footer"></div>
+
+  <!-- Scripts: Shared components and gallery logic -->
+  <script src="js/components.js"></script>
+  <script src="js/gallery.js"></script>
+</body>
+</html>
