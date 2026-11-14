@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard | ONE FOR ALL</title>
+  <meta name="robots" content="noindex">
+
+  <!-- The guard goes first so the page stays hidden until the login is verified -->
+  <script src="../js/auth.js" data-role="teacher"></script>
+
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body class="dash">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <a class="brand" href="../index.html">
+      <span class="brand__mark">O</span>
+      <span class="brand__name">ONE FOR ALL<small>Teacher portal</small></span>
+    </a>
+
+    <p class="side-label">Menu</p>
+    <nav class="side-nav">
+      <a class="side-link" href="#overview" data-panel-link="overview" data-title="Overview"><span data-icon="home"></span>Overview</a>
+      <a class="side-link" href="#classes" data-panel-link="classes" data-title="My Classes"><span data-icon="users"></span>My Classes</a>
+      <a class="side-link" href="#announcements" data-panel-link="announcements" data-title="Announcements"><span data-icon="bell"></span>Announcements</a>
+      <a class="side-link" href="#queries" data-panel-link="queries" data-title="Student Queries"><span data-icon="chat"></span>Student Queries</a>
+      <a class="side-link" href="#profile" data-panel-link="profile" data-title="Profile &amp; Security"><span data-icon="user"></span>Profile &amp; Security</a>
+    </nav>
+
+    <div class="sidebar__foot">
+      <button type="button" class="btn btn--side btn--block" data-logout><span data-icon="logout"></span>Sign out</button>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ===== Main area ===== -->
+  <div class="dash-main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><span data-icon="menu"></span></button>
+        <h1 class="topbar__title" id="pageTitle">Overview</h1>
+      </div>
+      <div class="user-chip">
+        <div class="user-chip__text">
+          <span class="user-chip__name" data-user="name"></span>
+          <span class="user-chip__role" data-user="role"></span>
+        </div>
+        <span class="avatar" data-user="initials" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <main class="content" id="main">
+
+      <!-- ---------- Overview ---------- -->
+      <section class="panel" id="overview" aria-label="Overview">
+        <div class="banner">
+          <div>
+            <h2>Welcome, <span data-user="firstName"></span></h2>
+            <p>Check your classes and reply to student questions from one place.</p>
+          </div>
+          <div class="banner__actions">
+            <a class="btn btn--primary" href="#queries" data-panel-link="queries">Review queries</a>
+            <a class="btn btn--ghost" href="#classes" data-panel-link="classes">My classes</a>
+          </div>
+        </div>
+
+        <!-- Expected JSON from GET /api/teacher/summary: { classes, students, openQueries } -->
+        <div class="stats" data-stats-endpoint="/api/teacher/summary">
+          <div class="stat" data-stat="classes"><span class="stat__icon"><span data-icon="users"></span></span><div><span class="stat__value">-</span><span class="stat__label">Classes</span></div></div>
+          <div class="stat" data-stat="students"><span class="stat__icon"><span data-icon="user"></span></span><div><span class="stat__value">-</span><span class="stat__label">Students</span></div></div>
+          <div class="stat" data-stat="openQueries"><span class="stat__icon"><span data-icon="chat"></span></span><div><span class="stat__value">-</span><span class="stat__label">Queries to answer</span></div></div>
+        </div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <h3 class="card__title">Waiting for your reply <a href="#queries" data-panel-link="queries">See all</a></h3>
+            <div data-list data-endpoint="/api/queries/assigned" data-render="query" data-limit="4" data-empty="No questions are waiting. Nice work."></div>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Latest announcements <a href="#announcements" data-panel-link="announcements">See all</a></h3>
+            <div data-list data-endpoint="/api/announcements" data-render="announcement" data-limit="3" data-empty="No announcements yet."></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Classes ---------- -->
+      <section class="panel" id="classes" aria-label="My classes" hidden>
+        <div class="panel__head"><h2>My Classes</h2><p>The classes and sections you teach.</p></div>
+        <div class="card">
+          <!-- Expected: GET /api/teacher/classes -> { items: [{ name, section, students }] } -->
+          <div data-list data-endpoint="/api/teacher/classes" data-render="class" data-empty="No classes have been assigned to you yet."></div>
+        </div>
+      </section>
+
+      <!-- ---------- Announcements ---------- -->
+      <section class="panel" id="announcements" aria-label="Announcements" hidden>
+        <div class="panel__head"><h2>Announcements</h2><p>Notices from the college office.</p></div>
+        <div class="card">
+          <!-- Expected: GET /api/announcements -> { items: [{ title, body, date, author }] } -->
+          <div data-list data-endpoint="/api/announcements" data-render="announcement" data-empty="No announcements yet."></div>
+        </div>
+      </section>
+
+      <!-- ---------- Student queries ---------- -->
+      <section class="panel" id="queries" aria-label="Student queries" hidden>
+        <div class="panel__head"><h2>Student Queries</h2><p>Questions from students that need an answer.</p></div>
+        <div class="card">
+          <!-- Expected: GET /api/queries/assigned -> { items: [{ subject, status, date, from }] } -->
+          <div data-list data-endpoint="/api/queries/assigned" data-render="query" data-empty="No questions are waiting. Nice work."></div>
+          <!-- TODO (Step 6): open a query to read it and write a reply -->
+        </div>
+      </section>
+
+      <!-- ---------- Profile ---------- -->
+      <section class="panel" id="profile" aria-label="Profile and security" hidden>
+        <div class="panel__head"><h2>Profile &amp; Security</h2><p>Your account details and password.</p></div>
+        <div class="grid grid--2">
+          <div class="card">
+            <h3 class="card__title">Account</h3>
+            <dl class="details">
+              <dt data-if-name hidden>Name</dt><dd data-if-name data-user="name" hidden></dd>
+              <dt>Teacher ID</dt><dd data-user="id"></dd>
+              <dt>Role</dt><dd data-user="role"></dd>
+            </dl>
+            <p class="note">Need your details corrected? Please contact the admin office.</p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Security</h3>
+            <div class="stack">
+              <p>Change your password regularly and never share it with anyone.</p>
+              <a class="btn btn--primary" href="../change-password.html">Change password</a>
+              <button type="button" class="btn btn--outline" data-logout>Sign out</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

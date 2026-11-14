@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | ONE FOR ALL</title>
+  <meta name="robots" content="noindex">
+
+  <!-- The guard goes first so the page stays hidden until the login is verified -->
+  <script src="../js/auth.js" data-role="student"></script>
+
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body class="dash">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <a class="brand" href="../index.html">
+      <span class="brand__mark">O</span>
+      <span class="brand__name">ONE FOR ALL<small>Student portal</small></span>
+    </a>
+
+    <p class="side-label">Menu</p>
+    <nav class="side-nav">
+      <a class="side-link" href="#overview" data-panel-link="overview" data-title="Overview"><span data-icon="home"></span>Overview</a>
+      <a class="side-link" href="#courses" data-panel-link="courses" data-title="My Courses"><span data-icon="book"></span>My Courses</a>
+      <a class="side-link" href="#announcements" data-panel-link="announcements" data-title="Announcements"><span data-icon="bell"></span>Announcements</a>
+      <a class="side-link" href="#queries" data-panel-link="queries" data-title="Query Portal"><span data-icon="chat"></span>Query Portal</a>
+      <a class="side-link" href="#profile" data-panel-link="profile" data-title="Profile &amp; Security"><span data-icon="user"></span>Profile &amp; Security</a>
+    </nav>
+
+    <div class="sidebar__foot">
+      <button type="button" class="btn btn--side btn--block" data-logout><span data-icon="logout"></span>Sign out</button>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ===== Main area ===== -->
+  <div class="dash-main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><span data-icon="menu"></span></button>
+        <h1 class="topbar__title" id="pageTitle">Overview</h1>
+      </div>
+      <div class="user-chip">
+        <div class="user-chip__text">
+          <span class="user-chip__name" data-user="name"></span>
+          <span class="user-chip__role" data-user="role"></span>
+        </div>
+        <span class="avatar" data-user="initials" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <main class="content" id="main">
+
+      <!-- ---------- Overview ---------- -->
+      <section class="panel" id="overview" aria-label="Overview">
+        <div class="banner">
+          <div>
+            <h2>Welcome back, <span data-user="firstName"></span></h2>
+            <p>Here is what is happening at college today. Have a question? Ask it in the Query Portal.</p>
+          </div>
+          <div class="banner__actions">
+            <a class="btn btn--primary" href="#queries" data-panel-link="queries">Ask a question</a>
+            <a class="btn btn--ghost" href="#announcements" data-panel-link="announcements">View announcements</a>
+          </div>
+        </div>
+
+        <!-- Expected JSON from GET /api/student/summary: { courses, attendance, openQueries } -->
+        <div class="stats" data-stats-endpoint="/api/student/summary">
+          <div class="stat" data-stat="courses"><span class="stat__icon"><span data-icon="book"></span></span><div><span class="stat__value">-</span><span class="stat__label">Courses</span></div></div>
+          <div class="stat" data-stat="attendance" data-suffix="%"><span class="stat__icon"><span data-icon="check"></span></span><div><span class="stat__value">-</span><span class="stat__label">Attendance</span></div></div>
+          <div class="stat" data-stat="openQueries"><span class="stat__icon"><span data-icon="chat"></span></span><div><span class="stat__value">-</span><span class="stat__label">Open queries</span></div></div>
+        </div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <h3 class="card__title">Latest announcements <a href="#announcements" data-panel-link="announcements">See all</a></h3>
+            <div data-list data-endpoint="/api/announcements" data-render="announcement" data-limit="3" data-empty="No announcements yet."></div>
+          </div>
+          <div class="card">
+            <h3 class="card__title">My recent queries <a href="#queries" data-panel-link="queries">See all</a></h3>
+            <div data-list data-endpoint="/api/queries/mine" data-render="query" data-limit="3" data-empty="You have not asked anything yet."></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Courses ---------- -->
+      <section class="panel" id="courses" aria-label="My courses" hidden>
+        <div class="panel__head"><h2>My Courses</h2><p>The subjects you are enrolled in this semester.</p></div>
+        <div class="card">
+          <!-- Expected: GET /api/student/courses -> { items: [{ code, name, teacher }] } -->
+          <div data-list data-endpoint="/api/student/courses" data-render="course" data-empty="You are not enrolled in any course yet."></div>
+        </div>
+      </section>
+
+      <!-- ---------- Announcements ---------- -->
+      <section class="panel" id="announcements" aria-label="Announcements" hidden>
+        <div class="panel__head"><h2>Announcements</h2><p>Notices from the college office and your teachers.</p></div>
+        <div class="card">
+          <!-- Expected: GET /api/announcements -> { items: [{ title, body, date, author }] } -->
+          <div data-list data-endpoint="/api/announcements" data-render="announcement" data-empty="No announcements yet."></div>
+        </div>
+      </section>
+
+      <!-- ---------- Query portal ---------- -->
+      <section class="panel" id="queries" aria-label="Query portal" hidden>
+        <div class="panel__head"><h2>Query Portal</h2><p>Ask about fees, exams, timetables or anything else. A teacher or the office will reply here.</p></div>
+        <div class="grid grid--2">
+          <div class="card">
+            <h3 class="card__title">My queries</h3>
+            <!-- Expected: GET /api/queries/mine -> { items: [{ subject, status, date }] } -->
+            <div data-list data-endpoint="/api/queries/mine" data-render="query" data-empty="You have not asked anything yet."></div>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Ask something new</h3>
+            <p>Typing a new question will be enabled when the Query Portal is released.</p>
+            <!-- TODO (Step 6): replace this button with the new-query form -->
+            <button type="button" class="btn btn--primary btn--block" style="margin-top:1rem" disabled>Ask a question</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Profile ---------- -->
+      <section class="panel" id="profile" aria-label="Profile and security" hidden>
+        <div class="panel__head"><h2>Profile &amp; Security</h2><p>Your account details and password.</p></div>
+        <div class="grid grid--2">
+          <div class="card">
+            <h3 class="card__title">Account</h3>
+            <dl class="details">
+              <dt data-if-name hidden>Name</dt><dd data-if-name data-user="name" hidden></dd>
+              <dt>Student ID</dt><dd data-user="id"></dd>
+              <dt>Role</dt><dd data-user="role"></dd>
+            </dl>
+            <p class="note">Need your details corrected? Please contact the admin office. Students cannot edit these themselves.</p>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Security</h3>
+            <div class="stack">
+              <p>Change your password regularly and never share it with anyone.</p>
+              <a class="btn btn--primary" href="../change-password.html">Change password</a>
+              <button type="button" class="btn btn--outline" data-logout>Sign out</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>
