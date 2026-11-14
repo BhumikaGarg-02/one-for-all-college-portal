@@ -94,4 +94,80 @@ const forgotPassword = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { login, forgotPassword };
+/* ---------- POST /api/auth/change-password ----------
+   Used for the forced change on first login and for any later change.
+   The route runs verifyToken first, so req.user is the signed-in user. */
+
+// Passwords containing any of these are guessed first by attackers, so they are refused
+const WEAK_WORDS = ['password', 'qwerty', '123456', 'letmein', 'changeme', 'admin123', 'oneforall', 'welcome'];
+
+// Returns a list of problems (an empty list means the password is acceptable).
+// Keep these rules in sync with public/js/change-password.js, which shows them live.
+function passwordProblems(password, userId) {
+  const problems = [];
+
+  // bcrypt only reads the first 72 BYTES, so cap the length instead of silently ignoring the rest
+  if (password.length < 8 || password.length > 64 || Buffer.byteLength(password, 'utf8') > 72) {
+    problems.push('Use 8 to 64 characters.');
+  }
+  if (!/[a-z]/.test(password)) problems.push('Add a lower-case letter.');
+  if (!/[A-Z]/.test(password)) problems.push('Add an upper-case letter.');
+  if (!/\d/.test(password)) problems.push('Add a number.');
+  if (!/[^A-Za-z0-9\s]/.test(password)) problems.push('Add a special character, like ! @ # $ %.');
+  if (/\s/.test(password)) problems.push('Do not use spaces.');
+  if (password.toUpperCase().includes(userId)) problems.push('Do not include your ID in the password.');
+  if (WEAK_WORDS.some(word => password.toLowerCase().includes(word))) {
+    problems.push('Avoid common words like "password" or "welcome".');
+  }
+  return problems;
+}
+
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body || {};
+
+  // 1) Both values must be strings of a sane size
+  const sane = value => typeof value === 'string' && value.length >= 1 && value.length <= 128;
+  if (!sane(currentPassword) || !sane(newPassword)) {
+    return res.status(400).json({ message: 'Invalid request.' });
+  }
+
+  // 2) Load the account with its hash (verifyToken has already rejected disabled accounts)
+  const user = await User.findById(req.user.id).select('+password');
+  if (!user || !user.password) {
+    return res.status(401).json({ message: 'Invalid session. Please sign in again.' });
+  }
+
+  // 3) The current (or temporary) password must be right. This is a 400, not a 401, so the
+  //    frontend can tell "typo" from "session expired". The route's rate limiter counts these.
+  if (!(await bcrypt.compare(currentPassword, user.password))) {
+    res.locals.wrongCurrentPassword = true;
+    return res.status(400).json({ message: 'Your current password is incorrect.', code: 'WRONG_CURRENT_PASSWORD' });
+  }
+
+  // 4) Strength rules, and it must really be a NEW password
+  const problems = passwordProblems(newPassword, user.userId);
+  if (newPassword === currentPassword) problems.push('Choose a password different from your current one.');
+  if (problems.length) {
+    return res.status(400).json({ message: 'Please choose a stronger password.', code: 'WEAK_PASSWORD', problems });
+  }
+
+  // 5) Save through the model (never updateOne), so the pre-save hook hashes the new password.
+  //    passwordChangedAt is also set here as a safety net: it is what ends every older session.
+  //    validateModifiedOnly stops an unrelated old field from blocking the save.
+  user.password = newPassword;
+  user.isFirstLogin = false;
+  user.passwordChangedAt = new Date();
+  await user.save({ validateModifiedOnly: true });
+
+  // 6) Older tokens stop working now (see verifyToken), so hand back a fresh one.
+  //    It is signed AFTER the save, so its issue time is never earlier than passwordChangedAt.
+  res.set('Cache-Control', 'no-store');
+  return res.status(200).json({
+    message: 'Password updated.',
+    token: signToken(user),
+    role: user.role,
+    mustChangePassword: user.isFirstLogin   // false now
+  });
+});
+
+module.exports = { login, forgotPassword, changePassword };

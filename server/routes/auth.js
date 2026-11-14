@@ -5,11 +5,12 @@
    ========================================================== */
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-const { login, forgotPassword } = require('../controllers/authController');
+const { login, forgotPassword, changePassword } = require('../controllers/authController');
+const { verifyToken } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Same JSON shape as every other API error. login.js shows this message to the user.
+// Same JSON shape as every other API error. The frontend shows this message to the user.
 const tooManyRequests = (req, res) =>
   res.status(429).json({ message: 'Too many attempts. Please wait a few minutes and try again.' });
 
@@ -34,8 +35,26 @@ const forgotLimiter = rateLimit({
   handler: tooManyRequests
 });
 
+// Someone holding a stolen token could try to guess the current password here, so wrong guesses
+// are limited: 5 per 15 minutes per ACCOUNT (not per IP, so a shared college network is not
+// affected). Only wrong-current-password answers count: the controller sets
+// res.locals.wrongCurrentPassword, and everything else is refunded.
+const changePasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  skipSuccessfulRequests: true,
+  requestWasSuccessful: (req, res) => !res.locals.wrongCurrentPassword,
+  keyGenerator: req => req.user.id,   // set by verifyToken, which runs first
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: tooManyRequests
+});
+
 // There is deliberately no registration route: IDs are issued by the admin only.
 router.post('/login', loginLimiter, login);
 router.post('/forgot-password', forgotLimiter, forgotPassword);
+
+// verifyToken only (not protect): a user who still has the temporary password must be able to reach this
+router.post('/change-password', verifyToken, changePasswordLimiter, changePassword);
 
 module.exports = router;
