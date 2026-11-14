@@ -1,0 +1,130 @@
+/* ==========================================================
+   queries.css: the Query Portal (student + teacher dashboards)
+   Load it AFTER dashboard.css.
+
+   It also carries the few form pieces (inputs, textarea, toast,
+   small buttons) that the student and teacher pages need. The
+   admin page has its own copy of those in admin.css.
+
+   Contents
+   01 Utilities + form fields     04 Question cards
+   02 Filter tabs                 05 Reply area
+   03 Toast + small buttons       06 Small screens
+   ========================================================== */
+
+/* ---------- 01. Utilities + form fields ---------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1.1rem; }
+.field > label { font-size: .88rem; font-weight: 600; color: var(--navy); }
+.field__hint { font-size: .8rem; color: var(--muted); }
+.field__row { display: flex; justify-content: space-between; gap: 1rem; }
+.field__error { min-height: 1.1em; font-size: .8rem; font-weight: 500; color: var(--bad); }
+.counter { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+.counter.is-near { color: var(--warn); }
+
+.input, .textarea {
+  width: 100%; padding: .7rem .95rem;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--white); color: var(--navy); font: inherit; font-size: .95rem; line-height: 1.5;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.input { height: 46px; padding-block: 0; }
+.textarea { min-height: 7.5rem; resize: vertical; }
+.input::placeholder, .textarea::placeholder { color: #9AA7BD; }
+.input:focus, .textarea:focus { outline: 0; border-color: var(--accent-dark); box-shadow: 0 0 0 3px rgba(0, 180, 216, .2); }
+.field.has-error .input, .field.has-error .textarea { border-color: #D64545; }
+
+.alert { margin-bottom: 1.1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; background: var(--bad-bg); color: var(--bad); }
+.alert[hidden] { display: none; }
+
+/* ---------- 02. Filter tabs ---------- */
+.tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.2rem; }
+.tab {
+  display: inline-flex; align-items: center; gap: .45rem; padding: .45rem .95rem;
+  border: 1.5px solid var(--border); border-radius: 999px; background: var(--white);
+  color: var(--text); font-size: .85rem; font-weight: 500; cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.tab:hover { border-color: var(--accent-dark); color: var(--accent-dark); }
+.tab[aria-pressed="true"] { background: var(--navy); border-color: var(--navy); color: #fff; }
+.tab__n { min-width: 1.4rem; padding: 0 .4rem; border-radius: 999px; background: rgba(108, 122, 147, .15); font-size: .75rem; text-align: center; }
+.tab[aria-pressed="true"] .tab__n { background: rgba(255, 255, 255, .2); }
+.tab__n:empty { display: none; }
+
+/* ---------- 03. Toast + small buttons ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 1.4rem; z-index: 200; max-width: calc(100% - 2rem);
+  padding: .8rem 1.3rem; border-radius: 8px; background: var(--navy); color: #fff; font-size: .9rem; font-weight: 500;
+  box-shadow: 0 14px 40px rgba(7, 18, 43, .3);
+  opacity: 0; transform: translate(-50%, 12px); pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.toast--error { background: #A02525; }
+
+.btn--small { padding: .38rem .85rem; font-size: .8rem; white-space: nowrap; }
+.btn.is-loading { opacity: .7; pointer-events: none; }
+.btn[hidden] { display: none; }
+
+/* ---------- 04. Question cards ---------- */
+.q-list { display: flex; flex-direction: column; gap: .8rem; }
+
+.q-card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--white); transition: box-shadow .2s ease, border-color .2s ease; }
+.q-card[open] { border-color: #BFD8E6; box-shadow: var(--shadow); }
+.q-card.is-open-question { border-left: 4px solid #E0A100; }
+.q-card.is-answered { border-left: 4px solid #1E9E63; }
+
+.q-card__head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+  padding: 1rem 1.2rem; cursor: pointer; list-style: none;
+}
+.q-card__head::-webkit-details-marker { display: none; }
+.q-card__head::marker { content: ''; }
+.q-card__head:hover .q-card__subject { color: var(--accent-dark); }
+.q-card__main { min-width: 0; }
+.q-card__subject { margin: 0; font-weight: 600; color: var(--navy); overflow-wrap: anywhere; transition: color .2s ease; }
+.q-card__meta { margin: .15rem 0 0; font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; }
+.q-card__side { display: flex; align-items: center; gap: .7rem; flex-shrink: 0; }
+.q-card__side::after {
+  content: ''; width: .55rem; height: .55rem; margin-top: -.2rem;
+  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg); transition: transform .2s ease;
+}
+.q-card[open] .q-card__side::after { transform: rotate(-135deg); margin-top: .2rem; }
+
+.q-card__body { padding: 0 1.2rem 1.2rem; }
+.q-label { margin: 0 0 .25rem; font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.q-text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text); }
+.q-block + .q-block { margin-top: 1rem; }
+
+.q-reply { padding: .9rem 1rem; border-left: 3px solid #1E9E63; border-radius: 0 8px 8px 0; background: #F2FAF6; }
+.q-reply .q-label { color: var(--ok); text-transform: none; letter-spacing: 0; font-size: .8rem; }
+.q-wait { margin: 1rem 0 0; padding: .7rem .9rem; border-radius: 8px; background: var(--warn-bg); color: var(--warn); font-size: .88rem; }
+.q-edit { margin-top: .6rem; }
+
+.q-more { margin-top: 1.1rem; text-align: center; }
+.q-more[hidden] { display: none; }
+
+/* ---------- 05. Reply area ---------- */
+.q-reply-form { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border); }
+.q-reply-form .field { margin-bottom: .6rem; }
+.q-reply-form .textarea { min-height: 6rem; }
+.q-form-foot { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; }
+.q-form-foot .counter { margin-right: auto; }
+
+/* ---------- 06. Small screens ---------- */
+@media (max-width: 960px) {
+  /* On a phone the "Ask a question" form comes first, so it is not buried under a long list */
+  .grid--2 > .q-form-card { order: -1; }
+}
+
+@media (max-width: 480px) {
+  .q-card__head { padding: .9rem 1rem; }
+  .q-card__body { padding: 0 1rem 1rem; }
+  .q-card__side { flex-direction: column-reverse; align-items: flex-end; gap: .4rem; }
+  .q-card__side::after { display: none; }
+}

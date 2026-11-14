@@ -10,6 +10,7 @@
   <script src="../js/auth.js" data-role="teacher"></script>
 
   <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/queries.css">
 </head>
 <body class="dash">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -24,9 +25,9 @@
     <p class="side-label">Menu</p>
     <nav class="side-nav">
       <a class="side-link" href="#overview" data-panel-link="overview" data-title="Overview"><span data-icon="home"></span>Overview</a>
+      <a class="side-link" href="#queries" data-panel-link="queries" data-title="Student Queries"><span data-icon="chat"></span>Student Queries</a>
       <a class="side-link" href="#classes" data-panel-link="classes" data-title="My Classes"><span data-icon="users"></span>My Classes</a>
       <a class="side-link" href="#announcements" data-panel-link="announcements" data-title="Announcements"><span data-icon="bell"></span>Announcements</a>
-      <a class="side-link" href="#queries" data-panel-link="queries" data-title="Student Queries"><span data-icon="chat"></span>Student Queries</a>
       <a class="side-link" href="#profile" data-panel-link="profile" data-title="Profile &amp; Security"><span data-icon="user"></span>Profile &amp; Security</a>
     </nav>
 
@@ -59,30 +60,46 @@
         <div class="banner">
           <div>
             <h2>Welcome, <span data-user="firstName"></span></h2>
-            <p>Check your classes and reply to student questions from one place.</p>
+            <p>Students are waiting for answers. Reply to their doubts from one place.</p>
           </div>
           <div class="banner__actions">
-            <a class="btn btn--primary" href="#queries" data-panel-link="queries">Review queries</a>
+            <a class="btn btn--primary" href="#queries" data-panel-link="queries">Open the inbox</a>
             <a class="btn btn--ghost" href="#classes" data-panel-link="classes">My classes</a>
           </div>
         </div>
 
-        <!-- Expected JSON from GET /api/teacher/summary: { classes, students, openQueries } -->
-        <div class="stats" data-stats-endpoint="/api/teacher/summary">
-          <div class="stat" data-stat="classes"><span class="stat__icon"><span data-icon="users"></span></span><div><span class="stat__value">-</span><span class="stat__label">Classes</span></div></div>
-          <div class="stat" data-stat="students"><span class="stat__icon"><span data-icon="user"></span></span><div><span class="stat__value">-</span><span class="stat__label">Students</span></div></div>
-          <div class="stat" data-stat="openQueries"><span class="stat__icon"><span data-icon="chat"></span></span><div><span class="stat__value">-</span><span class="stat__label">Queries to answer</span></div></div>
+        <!-- Filled by queries.js from GET /api/queries/summary -> { open, answered, answeredByMe } -->
+        <div class="stats" id="statsGroup">
+          <div class="stat" data-stat="open"><span class="stat__icon"><span data-icon="clock"></span></span><div><span class="stat__value">-</span><span class="stat__label">Waiting for a reply</span></div></div>
+          <div class="stat" data-stat="answered"><span class="stat__icon"><span data-icon="check"></span></span><div><span class="stat__value">-</span><span class="stat__label">Answered in total</span></div></div>
+          <div class="stat" data-stat="answeredByMe"><span class="stat__icon"><span data-icon="user"></span></span><div><span class="stat__value">-</span><span class="stat__label">Answered by you</span></div></div>
         </div>
 
         <div class="grid grid--2">
           <div class="card">
             <h3 class="card__title">Waiting for your reply <a href="#queries" data-panel-link="queries">See all</a></h3>
-            <div data-list data-endpoint="/api/queries/assigned" data-render="query" data-limit="4" data-empty="No questions are waiting. Nice work."></div>
+            <div id="recentList" aria-live="polite"></div>
           </div>
           <div class="card">
             <h3 class="card__title">Latest announcements <a href="#announcements" data-panel-link="announcements">See all</a></h3>
             <div data-list data-endpoint="/api/announcements" data-render="announcement" data-limit="3" data-empty="No announcements yet."></div>
           </div>
+        </div>
+      </section>
+
+      <!-- ---------- Student queries ---------- -->
+      <section class="panel" id="queries" aria-label="Student queries" hidden>
+        <div class="panel__head"><h2>Student Queries</h2><p>The oldest unanswered question is shown first. Open a question to read it and write your reply.</p></div>
+
+        <div class="card">
+          <div class="tabs" id="queryTabs" role="group" aria-label="Filter questions">
+            <button type="button" class="tab" data-tab="open" aria-pressed="true">Open <span class="tab__n" data-count="open"></span></button>
+            <button type="button" class="tab" data-tab="answered" aria-pressed="false">Answered <span class="tab__n" data-count="answered"></span></button>
+            <button type="button" class="tab" data-tab="all" aria-pressed="false">All <span class="tab__n" data-count="total"></span></button>
+          </div>
+
+          <div id="queryList" aria-live="polite"></div>
+          <div class="q-more"><button type="button" class="btn btn--outline" id="loadMore" hidden>Load more</button></div>
         </div>
       </section>
 
@@ -101,16 +118,6 @@
         <div class="card">
           <!-- Expected: GET /api/announcements -> { items: [{ title, body, date, author }] } -->
           <div data-list data-endpoint="/api/announcements" data-render="announcement" data-empty="No announcements yet."></div>
-        </div>
-      </section>
-
-      <!-- ---------- Student queries ---------- -->
-      <section class="panel" id="queries" aria-label="Student queries" hidden>
-        <div class="panel__head"><h2>Student Queries</h2><p>Questions from students that need an answer.</p></div>
-        <div class="card">
-          <!-- Expected: GET /api/queries/assigned -> { items: [{ subject, status, date, from }] } -->
-          <div data-list data-endpoint="/api/queries/assigned" data-render="query" data-empty="No questions are waiting. Nice work."></div>
-          <!-- TODO (Step 6): open a query to read it and write a reply -->
         </div>
       </section>
 
@@ -141,6 +148,9 @@
     </main>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script src="../js/dashboard.js"></script>
+  <script src="../js/queries.js"></script>
 </body>
 </html>

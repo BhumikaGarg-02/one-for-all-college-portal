@@ -13,6 +13,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const adminRoutes = require('./routes/admin');
+const queryRoutes = require('./routes/queries');
 const authRoutes = require('./routes/auth');
 const { verifyToken } = require('./middleware/authMiddleware');
 
@@ -54,6 +55,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.use('/api/admin', adminRoutes); 
+app.use('/api/queries', queryRoutes);
 app.use('/api/auth', authRoutes);
 
 // "Who am I?" Dashboards will call this to check the saved token and learn the role.

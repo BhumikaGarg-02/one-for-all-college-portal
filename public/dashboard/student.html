@@ -10,6 +10,7 @@
   <script src="../js/auth.js" data-role="student"></script>
 
   <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/queries.css">
 </head>
 <body class="dash">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -24,9 +25,9 @@
     <p class="side-label">Menu</p>
     <nav class="side-nav">
       <a class="side-link" href="#overview" data-panel-link="overview" data-title="Overview"><span data-icon="home"></span>Overview</a>
+      <a class="side-link" href="#queries" data-panel-link="queries" data-title="Query Portal"><span data-icon="chat"></span>Query Portal</a>
       <a class="side-link" href="#courses" data-panel-link="courses" data-title="My Courses"><span data-icon="book"></span>My Courses</a>
       <a class="side-link" href="#announcements" data-panel-link="announcements" data-title="Announcements"><span data-icon="bell"></span>Announcements</a>
-      <a class="side-link" href="#queries" data-panel-link="queries" data-title="Query Portal"><span data-icon="chat"></span>Query Portal</a>
       <a class="side-link" href="#profile" data-panel-link="profile" data-title="Profile &amp; Security"><span data-icon="user"></span>Profile &amp; Security</a>
     </nav>
 
@@ -59,7 +60,7 @@
         <div class="banner">
           <div>
             <h2>Welcome back, <span data-user="firstName"></span></h2>
-            <p>Here is what is happening at college today. Have a question? Ask it in the Query Portal.</p>
+            <p>Stuck on something? Ask your teachers in the Query Portal and the answer will appear here.</p>
           </div>
           <div class="banner__actions">
             <a class="btn btn--primary" href="#queries" data-panel-link="queries">Ask a question</a>
@@ -67,21 +68,71 @@
           </div>
         </div>
 
-        <!-- Expected JSON from GET /api/student/summary: { courses, attendance, openQueries } -->
-        <div class="stats" data-stats-endpoint="/api/student/summary">
-          <div class="stat" data-stat="courses"><span class="stat__icon"><span data-icon="book"></span></span><div><span class="stat__value">-</span><span class="stat__label">Courses</span></div></div>
-          <div class="stat" data-stat="attendance" data-suffix="%"><span class="stat__icon"><span data-icon="check"></span></span><div><span class="stat__value">-</span><span class="stat__label">Attendance</span></div></div>
-          <div class="stat" data-stat="openQueries"><span class="stat__icon"><span data-icon="chat"></span></span><div><span class="stat__value">-</span><span class="stat__label">Open queries</span></div></div>
+        <!-- Filled by queries.js from GET /api/queries/summary -> { open, answered, total } -->
+        <div class="stats" id="statsGroup">
+          <div class="stat" data-stat="open"><span class="stat__icon"><span data-icon="clock"></span></span><div><span class="stat__value">-</span><span class="stat__label">Waiting for a reply</span></div></div>
+          <div class="stat" data-stat="answered"><span class="stat__icon"><span data-icon="check"></span></span><div><span class="stat__value">-</span><span class="stat__label">Answered</span></div></div>
+          <div class="stat" data-stat="total"><span class="stat__icon"><span data-icon="chat"></span></span><div><span class="stat__value">-</span><span class="stat__label">Questions asked</span></div></div>
         </div>
 
         <div class="grid grid--2">
           <div class="card">
+            <h3 class="card__title">My recent questions <a href="#queries" data-panel-link="queries">See all</a></h3>
+            <div id="recentList" aria-live="polite"></div>
+          </div>
+          <div class="card">
             <h3 class="card__title">Latest announcements <a href="#announcements" data-panel-link="announcements">See all</a></h3>
             <div data-list data-endpoint="/api/announcements" data-render="announcement" data-limit="3" data-empty="No announcements yet."></div>
           </div>
+        </div>
+      </section>
+
+      <!-- ---------- Query portal ---------- -->
+      <section class="panel" id="queries" aria-label="Query portal" hidden>
+        <div class="panel__head"><h2>Query Portal</h2><p>Ask about a topic you did not understand. A teacher will reply, and the answer stays here for you.</p></div>
+
+        <div class="grid grid--2">
           <div class="card">
-            <h3 class="card__title">My recent queries <a href="#queries" data-panel-link="queries">See all</a></h3>
-            <div data-list data-endpoint="/api/queries/mine" data-render="query" data-limit="3" data-empty="You have not asked anything yet."></div>
+            <h3 class="card__title">My questions</h3>
+
+            <div class="tabs" id="queryTabs" role="group" aria-label="Filter my questions">
+              <button type="button" class="tab" data-tab="all" aria-pressed="true">All <span class="tab__n" data-count="total"></span></button>
+              <button type="button" class="tab" data-tab="open" aria-pressed="false">Waiting <span class="tab__n" data-count="open"></span></button>
+              <button type="button" class="tab" data-tab="answered" aria-pressed="false">Answered <span class="tab__n" data-count="answered"></span></button>
+            </div>
+
+            <div id="queryList" aria-live="polite"></div>
+            <div class="q-more"><button type="button" class="btn btn--outline" id="loadMore" hidden>Load more</button></div>
+          </div>
+
+          <div class="card q-form-card">
+            <h3 class="card__title">Ask a question</h3>
+            <div class="alert" id="askAlert" role="alert" hidden></div>
+            <form id="askForm" novalidate>
+              <div class="field" id="subjectField">
+                <div class="field__row">
+                  <label for="subjectInput">Subject</label>
+                  <span class="counter" id="subjectCount"></span>
+                </div>
+                <input class="input" type="text" id="subjectInput" name="subject" maxlength="120" autocomplete="off"
+                       placeholder="e.g. Pointers in C" aria-describedby="subjectError" required>
+                <span class="field__error" id="subjectError" aria-live="polite"></span>
+              </div>
+
+              <div class="field" id="questionField">
+                <div class="field__row">
+                  <label for="questionInput">Your question</label>
+                  <span class="counter" id="questionCount"></span>
+                </div>
+                <textarea class="textarea" id="questionInput" name="question" rows="6" maxlength="2000"
+                          placeholder="Explain what you tried and where you got stuck. The more detail, the better the answer."
+                          aria-describedby="questionError" required></textarea>
+                <span class="field__error" id="questionError" aria-live="polite"></span>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--block" id="askBtn">Send question</button>
+              <p class="field__hint" style="margin-top:.6rem">Tip: press Ctrl+Enter to send.</p>
+            </form>
           </div>
         </div>
       </section>
@@ -101,24 +152,6 @@
         <div class="card">
           <!-- Expected: GET /api/announcements -> { items: [{ title, body, date, author }] } -->
           <div data-list data-endpoint="/api/announcements" data-render="announcement" data-empty="No announcements yet."></div>
-        </div>
-      </section>
-
-      <!-- ---------- Query portal ---------- -->
-      <section class="panel" id="queries" aria-label="Query portal" hidden>
-        <div class="panel__head"><h2>Query Portal</h2><p>Ask about fees, exams, timetables or anything else. A teacher or the office will reply here.</p></div>
-        <div class="grid grid--2">
-          <div class="card">
-            <h3 class="card__title">My queries</h3>
-            <!-- Expected: GET /api/queries/mine -> { items: [{ subject, status, date }] } -->
-            <div data-list data-endpoint="/api/queries/mine" data-render="query" data-empty="You have not asked anything yet."></div>
-          </div>
-          <div class="card">
-            <h3 class="card__title">Ask something new</h3>
-            <p>Typing a new question will be enabled when the Query Portal is released.</p>
-            <!-- TODO (Step 6): replace this button with the new-query form -->
-            <button type="button" class="btn btn--primary btn--block" style="margin-top:1rem" disabled>Ask a question</button>
-          </div>
         </div>
       </section>
 
@@ -149,6 +182,9 @@
     </main>
   </div>
 
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script src="../js/dashboard.js"></script>
+  <script src="../js/queries.js"></script>
 </body>
 </html>
