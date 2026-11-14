@@ -82,7 +82,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 
   // 2) Check the account as it is NOW, not as it was when the token was issued.
   //    This is what lets the admin disable an account or change a role immediately.
-  const user = await User.findById(payload.sub).select('userId role isActive isFirstLogin passwordChangedAt');
+  const user = await User.findById(payload.sub).select('userId name role isActive isFirstLogin passwordChangedAt');
   if (!user) {
     return unauthorized(res, 'Invalid session. Please sign in again.');
   }
@@ -99,6 +99,7 @@ const verifyToken = asyncHandler(async (req, res, next) => {
   req.user = {
     id: user._id.toString(),
     userId: user.userId,
+    name: user.name,
     role: user.role,
     mustChangePassword: user.isFirstLogin === true
   };

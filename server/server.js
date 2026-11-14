@@ -12,6 +12,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
 
+const adminRoutes = require('./routes/admin');
 const authRoutes = require('./routes/auth');
 const { verifyToken } = require('./middleware/authMiddleware');
 
@@ -52,6 +53,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 /* ---------- 3) API routes ---------- */
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
+app.use('/api/admin', adminRoutes); 
 app.use('/api/auth', authRoutes);
 
 // "Who am I?" Dashboards will call this to check the saved token and learn the role.
@@ -59,6 +61,7 @@ app.use('/api/auth', authRoutes);
 app.get('/api/me', verifyToken, (req, res) => {
   res.json({
     userId: req.user.userId,
+     name: req.user.name,
     role: req.user.role,
     mustChangePassword: req.user.mustChangePassword
   });

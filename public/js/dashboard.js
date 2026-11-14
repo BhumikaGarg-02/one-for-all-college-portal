@@ -189,10 +189,16 @@
     function show(id, pushHash) {
       if (!names.has(id)) id = first;
       panels.forEach(p => { p.hidden = p.id !== id; });
+            // Only the sidebar links are "current" and set the page title. Other links that point at a
+      // panel (banner buttons, "See all") just switch panels and must not rename the page.
       links.forEach(link => {
-        if (link.dataset.panelLink === id) link.setAttribute('aria-current', 'page');
-        else link.removeAttribute('aria-current');
-        if (link.dataset.panelLink === id && title) title.textContent = link.dataset.title || link.textContent.trim();
+        if (!link.classList.contains('side-link')) return;
+        if (link.dataset.panelLink === id) {
+          link.setAttribute('aria-current', 'page');
+          if (title) title.textContent = link.dataset.title || link.textContent.trim();
+        } else {
+          link.removeAttribute('aria-current');
+        }
       });
       if (pushHash) history.replaceState(null, '', `#${id}`);
       document.body.classList.remove('nav-open');

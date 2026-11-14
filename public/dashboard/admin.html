@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | ONE FOR ALL</title>
+  <meta name="robots" content="noindex">
+
+  <!-- The guard goes first so the page stays hidden until the login is verified -->
+  <script src="../js/auth.js" data-role="admin"></script>
+
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="dash">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" id="sidebar" aria-label="Main menu">
+    <a class="brand" href="../index.html">
+      <span class="brand__mark">O</span>
+      <span class="brand__name">ONE FOR ALL<small>Admin portal</small></span>
+    </a>
+
+    <p class="side-label">Menu</p>
+    <nav class="side-nav">
+      <a class="side-link" href="#overview" data-panel-link="overview" data-title="Overview"><span data-icon="home"></span>Overview</a>
+      <a class="side-link" href="#users" data-panel-link="users" data-title="Users"><span data-icon="users"></span>Users</a>
+      <a class="side-link" href="#create" data-panel-link="create" data-title="Create User"><span data-icon="user"></span>Create User</a>
+      <a class="side-link" href="#profile" data-panel-link="profile" data-title="Profile &amp; Security"><span data-icon="check"></span>Profile &amp; Security</a>
+    </nav>
+
+    <div class="sidebar__foot">
+      <button type="button" class="btn btn--side btn--block" data-logout><span data-icon="logout"></span>Sign out</button>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- ===== Main area ===== -->
+  <div class="dash-main">
+    <header class="topbar">
+      <div class="topbar__left">
+        <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><span data-icon="menu"></span></button>
+        <h1 class="topbar__title" id="pageTitle">Overview</h1>
+      </div>
+      <div class="user-chip">
+        <div class="user-chip__text">
+          <span class="user-chip__name" data-user="name"></span>
+          <span class="user-chip__role" data-user="role"></span>
+        </div>
+        <span class="avatar" data-user="initials" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <main class="content" id="main">
+
+      <!-- ---------- Overview ---------- -->
+      <section class="panel" id="overview" aria-label="Overview">
+        <div class="banner">
+          <div>
+            <h2>Welcome, <span data-user="firstName"></span></h2>
+            <p>Create accounts for students and teachers, and look after existing ones.</p>
+          </div>
+          <div class="banner__actions">
+            <a class="btn btn--primary" href="#create" data-panel-link="create">Create a user</a>
+            <a class="btn btn--ghost" href="#users" data-panel-link="users">Manage users</a>
+          </div>
+        </div>
+
+        <!-- GET /api/admin/summary -> { students, teachers, awaitingFirstLogin, disabled } -->
+        <div class="stats" id="statsGroup" data-stats-endpoint="/api/admin/summary">
+          <div class="stat" data-stat="students"><span class="stat__icon"><span data-icon="user"></span></span><div><span class="stat__value">-</span><span class="stat__label">Students</span></div></div>
+          <div class="stat" data-stat="teachers"><span class="stat__icon"><span data-icon="users"></span></span><div><span class="stat__value">-</span><span class="stat__label">Teachers</span></div></div>
+          <div class="stat" data-stat="awaitingFirstLogin"><span class="stat__icon"><span data-icon="clock"></span></span><div><span class="stat__value">-</span><span class="stat__label">Awaiting first login</span></div></div>
+          <div class="stat" data-stat="disabled"><span class="stat__icon"><span data-icon="alert"></span></span><div><span class="stat__value">-</span><span class="stat__label">Disabled accounts</span></div></div>
+        </div>
+
+        <div class="card">
+          <h3 class="card__title">How new accounts work</h3>
+          <ol class="steps">
+            <li>Choose <strong>Create User</strong>, pick Student or Teacher and enter the full name. The next free ID is assigned for you.</li>
+            <li>A temporary password is shown <strong>once</strong>. Copy it and hand it to the person, in person or on paper.</li>
+            <li>When they first sign in they are asked to choose their own password. After that, nobody else knows it.</li>
+            <li>Forgot a password? Use <strong>Reset password</strong> in the Users list to issue a new temporary one.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ---------- Users ---------- -->
+      <section class="panel" id="users" aria-label="Users" hidden>
+        <div class="panel__head"><h2>Users</h2><p>Search accounts, disable or enable them, and reset passwords.</p></div>
+
+        <div class="card">
+          <div class="toolbar" role="search">
+            <label class="visually-hidden" for="searchInput">Search by name or ID</label>
+            <input class="input" type="search" id="searchInput" placeholder="Search by name or ID, e.g. STD0004" maxlength="50" autocomplete="off">
+            <label class="visually-hidden" for="roleFilter">Filter by role</label>
+            <select class="select" id="roleFilter">
+              <option value="">All roles</option>
+              <option value="student">Students</option>
+              <option value="teacher">Teachers</option>
+              <option value="admin">Admins</option>
+            </select>
+            <label class="visually-hidden" for="statusFilter">Filter by status</label>
+            <select class="select" id="statusFilter">
+              <option value="">Any status</option>
+              <option value="active">Active</option>
+              <option value="disabled">Disabled</option>
+              <option value="pending">Awaiting first login</option>
+            </select>
+          </div>
+
+          <div id="usersBox" aria-live="polite">
+            <div class="table-wrap">
+              <table class="table" id="usersTable" hidden>
+                <caption class="visually-hidden">User accounts</caption>
+                <thead>
+                  <tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Last sign-in</th><th scope="col">Actions</th></tr>
+                </thead>
+                <tbody id="usersBody"></tbody>
+              </table>
+            </div>
+            <div id="usersState"></div>
+          </div>
+
+          <div class="pager" id="pager" hidden>
+            <span id="pagerText"></span>
+            <div class="pager__buttons">
+              <button type="button" class="btn btn--outline btn--small" id="prevBtn">Previous</button>
+              <button type="button" class="btn btn--outline btn--small" id="nextBtn">Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Create user ---------- -->
+      <section class="panel" id="create" aria-label="Create user" hidden>
+        <div class="panel__head"><h2>Create User</h2><p>The ID is assigned automatically, for example STD0004 or TEA0002.</p></div>
+
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="alert" id="createAlert" role="alert" hidden></div>
+            <form id="createForm" novalidate>
+              <fieldset class="field">
+                <legend>Role</legend>
+                <div class="choices">
+                  <label class="choice"><input type="radio" name="role" value="student" checked><span><strong>Student</strong><small>ID starts with STD</small></span></label>
+                  <label class="choice"><input type="radio" name="role" value="teacher"><span><strong>Teacher</strong><small>ID starts with TEA</small></span></label>
+                </div>
+              </fieldset>
+
+              <div class="field" id="nameField">
+                <label for="nameInput">Full name</label>
+                <input class="input" type="text" id="nameInput" name="name" maxlength="80" autocomplete="off" placeholder="e.g. Asha Verma" aria-describedby="nameError" required>
+                <span class="field__error" id="nameError" aria-live="polite"></span>
+              </div>
+
+              <button type="submit" class="btn btn--primary" id="createBtn">Create account</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 class="card__title">Good to know</h3>
+            <ul class="stack">
+              <li>The temporary password is shown only once. It is not stored anywhere in readable form.</li>
+              <li>The person must replace it the first time they sign in.</li>
+              <li>IDs are never reused, even if an account is disabled.</li>
+              <li>Extra admin accounts are not created here, for safety.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Profile ---------- -->
+      <section class="panel" id="profile" aria-label="Profile and security" hidden>
+        <div class="panel__head"><h2>Profile &amp; Security</h2><p>Your account details and password.</p></div>
+        <div class="grid grid--2">
+          <div class="card">
+            <h3 class="card__title">Account</h3>
+            <dl class="details">
+              <dt data-if-name hidden>Name</dt><dd data-if-name data-user="name" hidden></dd>
+              <dt>Admin ID</dt><dd data-user="id"></dd>
+              <dt>Role</dt><dd data-user="role"></dd>
+            </dl>
+          </div>
+          <div class="card">
+            <h3 class="card__title">Security</h3>
+            <div class="stack">
+              <p>Admin accounts can change every other account. Use a strong password and never share it.</p>
+              <a class="btn btn--primary" href="../change-password.html">Change password</a>
+              <button type="button" class="btn btn--outline" data-logout>Sign out</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== Confirm dialog (disable / reset) ===== -->
+  <dialog class="dlg" id="confirmDialog" aria-labelledby="confirmTitle">
+    <form method="dialog" class="dlg__body">
+      <h2 class="dlg__title" id="confirmTitle"></h2>
+      <p id="confirmText"></p>
+      <div class="dlg__actions">
+        <button type="submit" value="cancel" class="btn btn--outline" id="confirmCancel">Cancel</button>
+        <button type="submit" value="ok" class="btn btn--primary" id="confirmOk">Confirm</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ===== Temporary password dialog (shown once) ===== -->
+  <dialog class="dlg" id="secretDialog" aria-labelledby="secretTitle">
+    <div class="dlg__body">
+      <h2 class="dlg__title" id="secretTitle"></h2>
+      <p id="secretIntro"></p>
+      <div class="secret">
+        <dl>
+          <dt>ID</dt><dd id="secretId"></dd>
+          <dt>Name</dt><dd id="secretName"></dd>
+          <dt>Temporary password</dt><dd class="secret__password" id="secretPassword"></dd>
+        </dl>
+      </div>
+      <p class="warning"><strong>Shown only once.</strong> Copy it now. If it is lost, use Reset password to make a new one.</p>
+      <div class="dlg__actions">
+        <button type="button" class="btn btn--outline" id="copyMessage">Copy login details</button>
+        <button type="button" class="btn btn--outline" id="copyPassword">Copy password</button>
+        <button type="button" class="btn btn--primary" id="secretDone">Done</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

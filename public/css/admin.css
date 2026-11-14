@@ -1,0 +1,139 @@
+/* ==========================================================
+   admin.css: extras for the Admin dashboard only.
+   Load it AFTER dashboard.css. It adds forms, the users table,
+   dialogs and the toast message.
+
+   Contents
+   01 Utilities + form fields    04 Pager
+   02 Toolbar                    05 Dialogs
+   03 Users table                06 Toast + small screens
+   ========================================================== */
+
+/* ---------- 01. Utilities + form fields ---------- */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.input, .select {
+  width: 100%; height: 46px; padding: 0 .95rem;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--white); color: var(--navy); font: inherit; font-size: .95rem;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.input::placeholder { color: #9AA7BD; }
+.input:focus, .select:focus { outline: 0; border-color: var(--accent-dark); box-shadow: 0 0 0 3px rgba(0, 180, 216, .2); }
+.field.has-error .input { border-color: #D64545; }
+
+.field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1.2rem; }
+.field > label, .field > legend { padding: 0; font-size: .88rem; font-weight: 600; color: var(--navy); }
+.field__hint { font-size: .8rem; color: var(--muted); }
+.field__error { min-height: 1.1em; font-size: .8rem; font-weight: 500; color: var(--bad); }
+fieldset.field { min-width: 0; margin-inline: 0; padding: 0; border: 0; }
+
+/* Two big radio "cards" for choosing Student / Teacher */
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.choice {
+  display: flex; align-items: center; gap: .8rem; padding: .9rem 1rem;
+  border: 1.5px solid var(--border); border-radius: 8px; background: var(--white); cursor: pointer;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.choice:hover { border-color: var(--accent-dark); }
+.choice:has(input:checked) { border-color: var(--accent-dark); background: var(--accent-tint); }
+.choice:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+.choice input { accent-color: var(--accent-dark); width: 1.05rem; height: 1.05rem; }
+.choice strong { display: block; color: var(--navy); font-size: .95rem; line-height: 1.3; }
+.choice small { color: var(--muted); font-size: .78rem; }
+
+.alert { margin-bottom: 1.1rem; padding: .8rem 1rem; border-radius: 8px; font-size: .9rem; background: var(--bad-bg); color: var(--bad); }
+.alert[hidden] { display: none; }
+
+.steps { margin: 0; padding-left: 1.2rem; list-style: decimal; }
+.steps li { margin-bottom: .6rem; }
+.steps li:last-child { margin-bottom: 0; }
+
+/* ---------- 02. Toolbar ---------- */
+.toolbar { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 1.2rem; }
+.toolbar .input { flex: 1 1 260px; width: auto; }
+.toolbar .select { flex: 0 1 170px; width: auto; }
+
+/* ---------- 03. Users table ---------- */
+.table-wrap { overflow-x: auto; }
+.table[hidden], .pager[hidden] { display: none; }
+.table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.table th {
+  padding: .7rem .75rem; text-align: left; white-space: nowrap;
+  font-size: .72rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.table td { padding: .85rem .75rem; vertical-align: middle; border-bottom: 1px solid var(--border); }
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr:hover { background: #F9FBFD; }
+.table .col-id { font-weight: 600; color: var(--navy); white-space: nowrap; }
+.table .col-muted { color: var(--muted); white-space: nowrap; }
+.table .col-name { min-width: 9rem; overflow-wrap: anywhere; }   /* a very long name wraps instead of widening the table */
+
+.badges { display: flex; flex-wrap: wrap; gap: .35rem; }
+.badge--bad { background: var(--bad-bg); color: var(--bad); }
+.badge--muted { background: #EEF1F6; color: var(--muted); }
+
+.row-actions { display: flex; flex-wrap: nowrap; gap: .5rem; }
+.btn--small { padding: .38rem .75rem; font-size: .8rem; white-space: nowrap; }
+.btn--danger { background: var(--white); border-color: #F0C4C4; color: var(--bad); }
+.btn--danger:hover { background: var(--bad-bg); border-color: var(--bad); }
+.btn--danger-solid { background: #C23B3B; color: #fff; }
+.btn--danger-solid:hover { background: #A02525; }
+.btn.is-loading { opacity: .7; pointer-events: none; }
+.you-tag { font-size: .8rem; color: var(--muted); font-style: italic; }
+
+/* ---------- 04. Pager ---------- */
+.pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid var(--border); font-size: .88rem; color: var(--muted); }
+.pager__buttons { display: flex; gap: .5rem; }
+
+/* ---------- 05. Dialogs ---------- */
+.dlg {
+  width: calc(100% - 2rem); max-width: 480px; padding: 0; border: 0; border-radius: 12px;
+  background: var(--white); color: var(--text); box-shadow: 0 30px 70px rgba(7, 18, 43, .35);
+}
+.dlg::backdrop { background: rgba(7, 18, 43, .6); }
+.dlg__body { padding: 1.7rem; }
+.dlg__title { font-size: 1.2rem; margin-bottom: .5rem; }
+.dlg__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .7rem; margin-top: 1.5rem; }
+
+.secret { margin: 1.1rem 0 0; padding: 1rem 1.1rem; border: 1.5px dashed #9CC9DC; border-radius: 8px; background: var(--accent-tint); }
+.secret dl { display: grid; grid-template-columns: 6.5rem 1fr; gap: .45rem .8rem; margin: 0; align-items: baseline; }
+.secret dt { font-size: .8rem; color: var(--muted); }
+.secret dd { margin: 0; color: var(--navy); font-weight: 600; overflow-wrap: anywhere; }
+.secret__password { font: 700 1.2rem ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .05em; user-select: all; }
+.warning { margin-top: 1rem; padding: .7rem .9rem; border-radius: 8px; background: var(--warn-bg); color: var(--warn); font-size: .85rem; }
+
+/* ---------- 06. Toast + small screens ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 1.4rem; z-index: 200; max-width: calc(100% - 2rem);
+  padding: .8rem 1.3rem; border-radius: 8px; background: var(--navy); color: #fff; font-size: .9rem; font-weight: 500;
+  box-shadow: 0 14px 40px rgba(7, 18, 43, .3);
+  opacity: 0; transform: translate(-50%, 12px); pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.toast--error { background: #A02525; }
+
+@media (max-width: 760px) {
+  /* The table turns into one card per user */
+  .table thead { position: absolute; left: -9999px; }
+  .table, .table tbody, .table tr, .table td { display: block; }
+  .table tr { padding: .9rem 0; border-bottom: 1px solid var(--border); }
+  .table tbody tr:last-child { border-bottom: 0; }
+  .table td { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .3rem 0; border: 0; text-align: right; }
+  .table td::before { content: attr(data-label); flex-shrink: 0; font-size: .78rem; font-weight: 500; color: var(--muted); text-align: left; }
+  .table .row-actions { flex-wrap: wrap; justify-content: flex-end; }
+  .badges { justify-content: flex-end; }
+  .toolbar .select { flex: 1 1 140px; }
+}
+
+@media (max-width: 480px) {
+  .choices { grid-template-columns: 1fr; }
+  .secret dl { grid-template-columns: 1fr; gap: 0; }
+  .secret dd { margin-bottom: .6rem; }
+  .dlg__actions .btn { flex: 1 1 100%; }
+}
