@@ -8,14 +8,7 @@
    Temporary local data. Once the backend exists (Step 3) these are
    replaced with fetch('/api/public/gallery') and fetch('/api/public/announcements'),
    which the Admin dashboard controls. */
-const galleryItems = [
-  { title: 'Annual Day 2026',       category: 'events', src: 'assets/images/gallery-1.jpg' },
-  { title: 'Main Block',            category: 'campus', src: 'assets/images/gallery-2.jpg' },
-  { title: 'Inter-College Cricket', category: 'sports', src: 'assets/images/gallery-3.jpg' },
-  { title: 'Tech Fest',             category: 'events', src: 'assets/images/gallery-4.jpg' },
-  { title: 'Central Library',       category: 'campus', src: 'assets/images/gallery-5.jpg' },
-  { title: 'Athletics Meet',        category: 'sports', src: 'assets/images/gallery-6.jpg' }
-];
+const galleryItems = (window.GALLERY_PHOTOS || []).filter(p => p.featured);
 
 const announcements = [
   { tag: 'Exams',  date: '2026-11-10', title: 'Semester exam timetable released',
@@ -81,12 +74,15 @@ function renderGallery(filter = 'all') {
 
   const items = galleryItems.filter(i => filter === 'all' || i.category === filter);
 
-  // Navy-to-blue gradient sits behind the photo so cards look fine before real images are added
+  // The blue gradient is the card itself. The photo sits on top, invisible, and fades in on hover (see style.css)
   grid.innerHTML = items.map((item, idx) => `
-    <figure class="gallery__item" data-title="${item.title}"
-            style="background-image: linear-gradient(${135 + idx * 20}deg, #0B1B3D, #0077B6)">
-      <img src="${item.src}" alt="${item.title}" loading="lazy" onerror="this.remove()">
+    <figure class="gallery__item" tabindex="0" data-title="${item.title}"
+            style="--g-angle: ${135 + idx * 20}deg">
+      <img data-src="${item.src}" alt="${item.title}" loading="lazy">
     </figure>`).join('');
+
+  // Load each photo (tries .jpg/.jpeg/.png if the first extension is wrong; a missing file leaves the gradient)
+  grid.querySelectorAll('img[data-src]').forEach(img => window.attachPhoto(img, img.dataset.src, () => img.remove()));
 
   // Small stagger-in with GSAP when available
   if (window.gsap) {

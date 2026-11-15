@@ -42,7 +42,7 @@
 
   /* Optional hero photo: drop campus.jpg into assets/images and it shows
      under the navy overlay. If the file is missing, the navy gradient is used. */
-  --hero-image: url('../assets/images/campus.jpg');
+--hero-image: url('../images/main_block.jpeg');
 }
 
 /* ---------- 02. Base + utilities ---------- */
@@ -330,7 +330,7 @@ h1, h2, h3, h4 {
   aspect-ratio: 4 / 5;
   border-radius: var(--radius);
   /* Gradient shows until principal.jpg is added */
-  background: url('../assets/images/principal.jpg') center / cover, linear-gradient(160deg, var(--navy-soft), var(--accent-dark));
+  background: url('../images/coordinator.jpeg') center / cover, linear-gradient(160deg, var(--navy-soft), var(--accent-dark));
 }
 blockquote { position: relative; margin: 0 0 1.5rem; padding: 2.2rem 0 0; font-size: 1.08rem; font-style: italic; color: var(--text); }
 blockquote::before { content: '\201C'; position: absolute; top: -.6rem; left: 0; font-size: 5rem; line-height: 1; font-style: normal; color: var(--accent); }
@@ -391,25 +391,45 @@ blockquote::before { content: '\201C'; position: absolute; top: -.6rem; left: 0;
 .chip.is-active { background: var(--accent-dark); border-color: var(--accent-dark); color: var(--white); }
 
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+
+/* Hover-reveal card: the blue gradient is what you see by default,
+   the campus photo fades in over it when the card is hovered or focused. */
 .gallery__item {
   position: relative; overflow: hidden; margin: 0;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius);
-  background-size: cover; background-position: center;
+  background: linear-gradient(var(--g-angle, 135deg), var(--navy), var(--accent-dark));
   box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: box-shadow .3s ease;
 }
-.gallery__item img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.23, 1, .32, 1); }
-.gallery__item:hover img { transform: scale(1.08); }
+.gallery__item:hover, .gallery__item:focus-visible { box-shadow: var(--shadow-hover); }
+.gallery__item:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+.gallery__item img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transform: scale(1.06);
+  transition: opacity .6s ease, transform .8s cubic-bezier(.23, 1, .32, 1);
+}
+.gallery__item:hover img, .gallery__item:focus-visible img { opacity: 1; transform: scale(1); }
+
+/* The title sits on the gradient and stays readable on top of the photo */
 .gallery__item::after {
   content: attr(data-title);
-  position: absolute; inset: auto 0 0 0;
-  padding: 2.6rem 1.3rem 1.1rem;
-  background: linear-gradient(transparent, rgba(7, 18, 43, .9));
-  color: var(--white); font-size: .95rem; font-weight: 500;
-  transform: translateY(100%); transition: transform .4s ease;
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-end;
+  padding: 1.3rem;
+  background: linear-gradient(transparent 45%, rgba(7, 18, 43, .85));
+  color: var(--white); font-size: 1rem; font-weight: 600;
 }
-.gallery__item:hover::after { transform: translateY(0); }
 
+/* Phones and tablets cannot hover, so the photos are simply shown */
+@media (hover: none) {
+  .gallery__item img { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery__item img { transition: opacity .2s ease; transform: none; }
+}
 /* ---------- 12. Map + contact ---------- */
 address { margin-bottom: 1.8rem; font-style: normal; line-height: 2; }
 address a { color: var(--accent-dark); font-weight: 500; transition: color .3s ease; }
