@@ -104,13 +104,18 @@
 }
 .media-panel img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.23, 1, .32, 1); }
 .media-panel:hover img { transform: scale(1.06); }
-.media-panel__tag {
-  position: absolute; left: 1.2rem; bottom: 1.2rem;
-  padding: .4rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .95); color: var(--navy);
-  font-size: .8rem; font-weight: 600;
+/* Hover-reveal version (About page): gradient first, photo fades in on hover or keyboard focus */
+.media-panel--reveal { cursor: pointer; }
+.media-panel--reveal img {
+  position: absolute; inset: 0;
+  opacity: 0; transform: scale(1.06);
+  transition: opacity .6s ease, transform .8s cubic-bezier(.23, 1, .32, 1);
 }
+.media-panel--reveal:hover img, .media-panel--reveal:focus-visible img { opacity: 1; transform: scale(1); }
+.media-panel--reveal:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.media-panel--reveal .media-panel__tag { z-index: 1; }   /* the badge always stays above the photo */
+@media (hover: none) { .media-panel--reveal img { opacity: 1; transform: none; } }   /* touch screens cannot hover */
+@media (prefers-reduced-motion: reduce) { .media-panel--reveal img { transition: opacity .2s ease; transform: none; } }
 
 /* ---------- 04. Program cards + admission steps ---------- */
 .programs-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
