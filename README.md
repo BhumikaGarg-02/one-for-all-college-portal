@@ -2,7 +2,7 @@
 
 A full-stack college portal. A public website shows the college to visitors, and a closed, role-based portal lets **students**, **teachers** and **admins** sign in. Its centrepiece is a **Student-Teacher Doubt (Query) Portal**.
 
-Built by **Team Anti Gravity** as a Web Development Lab project.
+Built as a Web Development Lab project.
 
 ---
 
